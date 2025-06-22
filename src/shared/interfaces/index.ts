@@ -42,11 +42,12 @@ export interface Firm {
   address: string;
   site: string;
   default_phone: string;
+  default_email: string;
   description: string;
   rating: string;
   reviews_count: string;
   category_id: string;
   city_id: string;
   coords: string;
+  title: string;
 }
-
