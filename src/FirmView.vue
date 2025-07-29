@@ -13,10 +13,6 @@
     :class="{ 'sm:ml-[64px]': expanded === 'false' }"
     class="sm:ml-64 p-4 relative top-[78px]"
   >
-    <div class="flex flex-col gap-2 justify-center mb-4 rounded-sm bg-gray-50 dark:bg-gray-700 px-8 py-4">
-      <RouterLink to="/">Back</RouterLink>
-    </div>
-
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <div class="flex items-center px-8 py-4 mb-4 rounded-sm bg-gray-50 dark:bg-gray-700">
         {{ $route.params.id }}
@@ -32,7 +28,7 @@
         <input
           type="text"
           id="firm_name"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:focus:bg-gray-700"
           placeholder="Firm name"
           v-model="firm.name"
         />
@@ -173,10 +169,10 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
-import { RouterLink, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useSelectedFirmStore } from './entities';
 import { storeToRefs } from 'pinia';
-import { BACKEND_PORT } from '@/shared/index.js';
+import { updateFirm } from '@/shared/api';
 
 const route = useRoute();
 const expandedStore = useLocalStorage('sidebar-expanded', '');
@@ -195,18 +191,7 @@ onMounted(() => {
 
 const handleSubmit = async () => {
   try {
-    const res = await fetch(`${BACKEND_PORT}/api/firm_by_url/${route.params.id}`, {
-      headers: { 'Content-Type': 'application/json' },
-      method: 'PUT',
-      credentials: 'include',
-      body: JSON.stringify({
-        ...firm.value,
-        floor: firm.value?.floor ? firm.value?.floor : '',
-        default_email: firm.value?.default_email ? firm.value?.default_email : '',
-        title: firm.value?.title ? firm.value?.title : '',
-      }),
-    });
-
+    const res = await updateFirm(route.params.id, firm.value);
     if (res.ok) {
       console.log(res);
     }

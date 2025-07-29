@@ -1,16 +1,14 @@
 import { createWebHistory, createRouter } from 'vue-router';
+import { checkAuth } from '@/shared/api';
 
 import LoginView from './LoginView.vue';
 import HomeView from './HomeView.vue';
 import FirmView from './FirmView.vue';
-import { BACKEND_PORT } from '@/shared';
 
 const isAuthenticated = async (to, from, next) => {
   try {
-    const res = await fetch(`${BACKEND_PORT}/api/users/me`, {
-      method: 'GET',
-      credentials: 'include',
-    });
+    const res = await checkAuth();
+
     if (res.ok) {
       next();
     } else {

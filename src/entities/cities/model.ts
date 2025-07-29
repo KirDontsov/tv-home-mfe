@@ -1,12 +1,11 @@
-import { defineStore } from "pinia";
-import { BACKEND_PORT, CitiesQueryResult, City } from "../../shared";
+import { defineStore } from 'pinia';
+import { BACKEND_PORT, CitiesQueryResult, City } from '@/shared';
 
 export const useCitiesStore = defineStore('cities', {
   state: () => ({
     cities: null as City[] | null,
     citiesLoading: true,
   }),
-
   actions: {
     async getCities(): Promise<City[] | null> {
       try {
@@ -27,4 +26,4 @@ export const useCitiesStore = defineStore('cities', {
       }
     },
   },
-})
+});
