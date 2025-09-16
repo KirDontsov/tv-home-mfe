@@ -35,7 +35,7 @@ const password = ref();
 const handleSubmit = async () => {
   const res = await login(email.value, password.value);
 
-  if (res.ok) {
+  if (res?.ok) {
     await router.push('/');
   } else {
     console.warn('Ошибка HTTP: ' + res.status);

@@ -12,10 +12,9 @@ const isAuthenticated = async (to, from, next) => {
   try {
     const res = await checkAuth();
 
-    if (res.ok) {
+    if (res?.ok) {
       next();
     } else {
-      console.log('res', res.ok);
       // There was an error so redirect
       window.location.href = '/login';
     }

@@ -79,7 +79,7 @@ export const getAvitoItemAnalytics = async (params: AvitoItemAnalyticsParams, re
     }
 
     // Check for other non-200 status codes
-    if (!res.ok) {
+    if (!res?.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
 

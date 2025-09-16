@@ -187,7 +187,7 @@ onMounted(() => {
 const handleSubmit = async () => {
   try {
     const res = await updateFirm(route.params.id, firm.value);
-    if (res.ok) {
+    if (res?.ok) {
       console.log(res);
     }
   } catch (e) {
