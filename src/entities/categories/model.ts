@@ -1,5 +1,6 @@
-import { defineStore } from "pinia";
-import { BACKEND_PORT, CategoriesQueryResult, Category } from "../../shared";
+import { defineStore } from 'pinia';
+import type { CategoriesQueryResult, Category } from '@/shared';
+import { getCategories } from '@/shared/api/categories';
 
 export const useCategoriesStore = defineStore('categories', {
   state: () => ({
@@ -10,17 +11,7 @@ export const useCategoriesStore = defineStore('categories', {
   actions: {
     async getCategories(): Promise<Category[] | null> {
       try {
-        const categories: CategoriesQueryResult = await fetch(
-          `${BACKEND_PORT}/api/categories?page=${1}&limit=${10}`,
-          {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'GET',
-          },
-        )
-          .then((res) => res.json())
-          .catch(() => {
-            console.warn('error');
-          });
+        const categories: CategoriesQueryResult = await getCategories({});
 
         this.categories = categories?.data?.categories?.filter((x) => x?.is_active === 'true') || null;
       } catch (error) {
@@ -31,4 +22,4 @@ export const useCategoriesStore = defineStore('categories', {
       }
     },
   },
-})
+});

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import { BACKEND_PORT, CitiesQueryResult, City } from '@/shared';
+import type { CitiesQueryResult, City } from '@/shared';
+import { getCities } from '@/shared/api/cities/cities';
 
 export const useCitiesStore = defineStore('cities', {
   state: () => ({
@@ -9,14 +10,8 @@ export const useCitiesStore = defineStore('cities', {
   actions: {
     async getCities(): Promise<City[] | null> {
       try {
-        const cities: CitiesQueryResult = await fetch(`${BACKEND_PORT}/api/cities?page=${1}&limit=${10}`, {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'GET',
-        })
-          .then((res) => res.json())
-          .catch(() => {
-            console.warn('error');
-          });
+        const cities: CitiesQueryResult = await getCities({});
+
         this.cities = cities?.data?.cities?.filter((x) => x?.is_active === 'true') || null;
       } catch (error) {
         console.warn(error);

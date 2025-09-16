@@ -11,6 +11,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.5",
     "@vueuse/core": "^13.1.0",
+    "js-cookie": "^3.0.5",
     "pinia": "^3.0.2",
     "single-spa-vue": "^3.0.1",
     "tailwindcss": "^4.1.5",
@@ -18,12 +19,14 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3",
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@vitejs/plugin-vue": "^5.2.2",
     "@vue/compiler-sfc": "^3.0.11",
     "eslint-plugin-vue": "^10.2.0",
     "sass": "^1.89.0",
-    "vite": "^6.3.1"
+    "vite": "^6.3.1",
+    "vue-json-to-csv": "^1.1.8"
   },
   "packageManager": "yarn@4.9.1"
 }

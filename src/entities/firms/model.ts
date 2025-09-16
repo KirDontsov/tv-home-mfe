@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { useCityStore } from "../city";
-import { useCategoryStore } from "../category";
-import { BACKEND_PORT, Firm } from "../../shared";
-
+import { defineStore } from 'pinia';
+import { useCityStore } from '../city';
+import { useCategoryStore } from '@/entities';
+import type { Firm } from '@/shared';
+import { getFirms } from '@/shared/api/firms';
 
 export const useFirmsStore = defineStore('firms', {
   state: () => ({
@@ -12,8 +12,8 @@ export const useFirmsStore = defineStore('firms', {
 
   actions: {
     async getFirms(page, limit): Promise<Firm[] | null> {
-      const cityStore = useCityStore()
-      const categoryStore = useCategoryStore()
+      const cityStore = useCityStore();
+      const categoryStore = useCategoryStore();
       try {
         if (
           !cityStore.city ||
@@ -24,24 +24,15 @@ export const useFirmsStore = defineStore('firms', {
           return null;
         }
 
-        const firms = await fetch(
-          `${BACKEND_PORT}/api/firms_by_abbr?city_id=${cityStore.city}&category_id=${categoryStore.category}&page=${page}&limit=${limit}`,
-          {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'GET',
-          },
-        )
-          .then((res) => res.json())
-          .catch(() => {
-            console.warn('error');
-          });
+        const firms = await getFirms({ city: cityStore.city, category: categoryStore.category, page, limit });
+
         this.firms = firms?.data?.firms || null;
       } catch (error) {
         console.warn(error);
         return null;
       } finally {
-        this.firmsLoading = false
+        this.firmsLoading = false;
       }
     },
   },
-})
+});

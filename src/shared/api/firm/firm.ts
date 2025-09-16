@@ -18,3 +18,19 @@ export async function updateFirm(id, firm) {
     throw e;
   }
 }
+
+export async function getFirmByUrl(id) {
+  try {
+    const res = await fetch(`${BACKEND_PORT}/api/firm_by_url/${id}`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .catch(() => {
+        console.warn('error getFirm');
+      });
+    return res;
+  } catch (e) {
+    throw e;
+  }
+}

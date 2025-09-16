@@ -1,9 +1,12 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import { checkAuth } from '@/shared/api';
 
-import LoginView from './LoginView.vue';
-import HomeView from './HomeView.vue';
-import FirmView from './FirmView.vue';
+import LoginView from './pages/login-view';
+import FirmView from './pages/firm-view';
+import FirmsView from '@/pages/firms-view';
+import AvitoView from '@/pages/avito-view';
+import AvitoEditor from '@/pages/avito-editor';
+import AvitoCreate from '@/pages/avito-create';
 
 const isAuthenticated = async (to, from, next) => {
   try {
@@ -24,7 +27,28 @@ const isAuthenticated = async (to, from, next) => {
 const routes = [
   {
     path: '/',
-    component: HomeView,
+    component: AvitoView,
+    beforeEnter: (to, from, next) => {
+      isAuthenticated(to, from, next);
+    },
+  },
+  {
+    path: '/editor',
+    component: AvitoEditor,
+    beforeEnter: (to, from, next) => {
+      isAuthenticated(to, from, next);
+    },
+  },
+  {
+    path: '/create',
+    component: AvitoCreate,
+    beforeEnter: (to, from, next) => {
+      isAuthenticated(to, from, next);
+    },
+  },
+  {
+    path: '/firms',
+    component: FirmsView,
     beforeEnter: (to, from, next) => {
       isAuthenticated(to, from, next);
     },

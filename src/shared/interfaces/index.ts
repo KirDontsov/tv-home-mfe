@@ -51,3 +51,5 @@ export interface Firm {
   coords: string;
   title: string;
 }
+
+export * from './avito';

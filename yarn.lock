@@ -808,17 +808,20 @@ __metadata:
   resolution: "@top-vybor/home-mfe@workspace:."
   dependencies:
     "@tailwindcss/vite": "npm:^4.1.5"
+    "@types/js-cookie": "npm:^3"
     "@typescript-eslint/eslint-plugin": "npm:^8.34.1"
     "@vitejs/plugin-vue": "npm:^5.2.2"
     "@vue/compiler-sfc": "npm:^3.0.11"
     "@vueuse/core": "npm:^13.1.0"
     eslint-plugin-vue: "npm:^10.2.0"
+    js-cookie: "npm:^3.0.5"
     pinia: "npm:^3.0.2"
     sass: "npm:^1.89.0"
     single-spa-vue: "npm:^3.0.1"
     tailwindcss: "npm:^4.1.5"
     vite: "npm:^6.3.1"
     vue: "npm:^3.5.13"
+    vue-json-to-csv: "npm:^1.1.8"
     vue-router: "npm:^4.5.1"
   languageName: unknown
   linkType: soft
@@ -836,6 +839,13 @@ __metadata:
   version: 1.0.7
   resolution: "@types/estree@npm:1.0.7"
   checksum: 10c0/be815254316882f7c40847336cd484c3bc1c3e34f710d197160d455dc9d6d050ffbf4c3bc76585dba86f737f020ab20bdb137ebe0e9116b0c86c7c0342221b8c
+  languageName: node
+  linkType: hard
+
+"@types/js-cookie@npm:^3":
+  version: 3.0.6
+  resolution: "@types/js-cookie@npm:3.0.6"
+  checksum: 10c0/173afaf5ea9d86c22395b9d2a00b6adb0006dcfef165d6dcb0395cdc32f5a5dcf9c3c60f97194119963a15849b8f85121e1ae730b03e40bc0c29b84396ba22f9
   languageName: node
   linkType: hard
 
@@ -1803,6 +1813,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-cookie@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "js-cookie@npm:3.0.5"
+  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
+  languageName: node
+  linkType: hard
+
 "jsbn@npm:1.1.0":
   version: 1.1.0
   resolution: "jsbn@npm:1.1.0"
@@ -2702,6 +2719,13 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 10c0/f1534a3f42d14b30e11c58e5e451903d965d5f5ba18d8c81f9df208589e3d2c65535abaa3268d3963573174b8e056ea7bc445f567622c65fcdf98eb4acc1bf4e
+  languageName: node
+  linkType: hard
+
+"vue-json-to-csv@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "vue-json-to-csv@npm:1.1.8"
+  checksum: 10c0/f9f736523c5fcde1781ad05d81f18b313268adb2014dbd109e557568c4ebec85a62c9f3d5dbe0e1cef1c07bb95102f1e30a999285ccf7a221a7c9d7cb0847c9e
   languageName: node
   linkType: hard
 

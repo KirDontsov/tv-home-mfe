@@ -1,11 +1,11 @@
-import './style.css'
-import { createApp, h } from 'vue'
-import App from './App.vue'
-import singleSpaVue from 'single-spa-vue'
-import { createPinia } from 'pinia'
-import router from './router'
+import './style.css';
+import { createApp, h } from 'vue';
+import App from './App.vue';
+import singleSpaVue from 'single-spa-vue';
+import { createPinia } from 'pinia';
+import router from './router';
 
-const pinia = createPinia()
+const pinia = createPinia();
 
 const vueLifecycles = singleSpaVue({
   createApp,
@@ -23,11 +23,11 @@ const vueLifecycles = singleSpaVue({
     },
   },
   handleInstance: (app) => {
-    app.use(pinia)
-    app.use(router)
-    // app.use(router);
-  }
+    app.use(pinia);
+    app.use(router);
+  },
 });
+
 export const bootstrap = vueLifecycles.bootstrap;
 export const mount = vueLifecycles.mount;
 export const unmount = vueLifecycles.unmount;

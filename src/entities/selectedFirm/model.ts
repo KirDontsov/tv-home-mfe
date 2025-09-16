@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import { BACKEND_PORT, type Firm } from '../../shared';
+import type { Firm } from '@/shared';
+import { getFirmByUrl } from '@/shared/api';
 
 export const useSelectedFirmStore = defineStore('selectedFirm', {
   state: () => ({
@@ -11,14 +12,8 @@ export const useSelectedFirmStore = defineStore('selectedFirm', {
       try {
         this.firmLoading = true;
 
-        const firm = await fetch(`${BACKEND_PORT}/api/firm_by_url/${firm_id}`, {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'GET',
-        })
-          .then((res) => res.json())
-          .catch(() => {
-            console.warn('error getFirm');
-          });
+        const firm = await getFirmByUrl(firm_id);
+
         this.firm = firm?.data?.firm || null;
       } catch (error) {
         console.warn(error);
