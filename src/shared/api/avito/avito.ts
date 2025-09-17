@@ -20,7 +20,25 @@ export const getAvitoToken = async () => {
   }
 };
 
-export const getAvitoItems = async ({ avito_token, page }: AvitoTokenParams) => {
+export const getAvitoItems = async () => {
+  try {
+    const res = await fetch(`${BACKEND_PORT}/api/avito/ads_by_feed`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .catch(() => {
+        console.warn('error');
+      });
+
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getAvitoItemsFromAvitoApi = async ({ avito_token, page }: AvitoTokenParams) => {
   try {
     const res = await fetch(`${BACKEND_PORT}/api/avito/get_items`, {
       headers: { 'Content-Type': 'application/json' },

@@ -10,3 +10,4 @@ export * from './avito-items';
 export * from './avito-item-form';
 export * from './avito-categories';
 export * from './avito-category-fields';
+export * from './avito-feeds';

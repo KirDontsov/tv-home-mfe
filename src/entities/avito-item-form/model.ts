@@ -15,7 +15,7 @@ export const useAvitoItemFormStore = defineStore('avito-item-form', {
     getSelectedItem() {
       const itemsStore = useAvitoItemsStore();
 
-      return itemsStore.items.find((x) => Number(x?.id) === Number(this?.selected));
+      return itemsStore.items?.find((x) => Number(x?.id) === Number(this?.selected));
     },
   },
 });

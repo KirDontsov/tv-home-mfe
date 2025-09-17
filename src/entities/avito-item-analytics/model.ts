@@ -22,9 +22,10 @@ export function useAvitoItemsAnalytics() {
 
       if (analyticsResponse?.result?.groupings) {
         // Create a map of itemId -> analytics
+        // Note: grouping.id is number, but item.id is string (ad_id)
         const analyticsMap = new Map();
         analyticsResponse.result.groupings.forEach((grouping) => {
-          analyticsMap.set(grouping.id, grouping.metrics);
+          analyticsMap.set(grouping.id.toString(), grouping.metrics);
         });
 
         // Combine analytics with items

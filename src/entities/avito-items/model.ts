@@ -1,21 +1,6 @@
 import { defineStore } from 'pinia';
-import type { AvitoGetItemsResponse, AvitoMeta, AvitoItem, AvitoItemAnalyticsParams } from '@/shared';
+import type { AvitoMeta, AvitoItemAnalyticsParams, AvitoAdsByFeedResponse, AvitoAd } from '@/shared';
 import { getAvitoItemAnalytics, getAvitoItems } from '@/shared/api/avito';
-import type { AvitoTokenParams } from '@/shared';
-
-export interface AvitoItemWithAnalytics extends AvitoItem {
-  analytics?: {
-    views: number;
-    contacts: number;
-    viewsToContactsConversion: number;
-    favorites: number;
-    averageViewCost: number;
-    averageContactCost: number;
-    impressions: number;
-    impressionsToViewsConversion: number;
-    spending: number;
-  };
-}
 
 export interface AvitoAnalytics {
   views: string;
@@ -52,7 +37,7 @@ export interface AvitoMetric {
 export const useAvitoItemsStore = defineStore('avito-items', {
   state: () => ({
     meta: null as AvitoMeta | null,
-    items: [] as AvitoItemWithAnalytics[],
+    items: [] as AvitoAd[],
     itemsLoading: true,
     analyticsData: null as AvitoAnalytics,
     analyticsLoading: false,
@@ -60,14 +45,27 @@ export const useAvitoItemsStore = defineStore('avito-items', {
   }),
 
   actions: {
-    async getAvitoItems({ avito_token, page }: AvitoTokenParams): Promise<AvitoGetItemsResponse | null> {
+    async getAvitoItems(): Promise<AvitoAdsByFeedResponse | null> {
       try {
         this.itemsLoading = true;
-        const res = await getAvitoItems({ avito_token, page });
+        const res = await getAvitoItems();
 
-        if (res) {
-          this.items.push(...(res?.data?.items || []));
-          this.meta = res?.data?.meta || null;
+        if (res && res.status === 'success') {
+          // Flatten all ads from all feeds
+          const allAds: AvitoAd[] = [];
+          res.data.forEach((feed) => {
+            allAds.push(...feed.ads);
+          });
+
+          // Add ads directly to the store (no transformation needed)
+          // We need to cast to AvitoAd to satisfy TypeScript
+          this.items.push(...(allAds as AvitoAd[]));
+
+          // Create a mock meta object since we don't have pagination in the new structure
+          this.meta = {
+            page: 1,
+            per_page: allAds.length,
+          };
         }
 
         return res;
@@ -87,7 +85,7 @@ export const useAvitoItemsStore = defineStore('avito-items', {
         // Fetch analytics data
         const analyticsResponse = await getAvitoItemAnalytics(params);
 
-        this.analyticsData = analyticsResponse.data;
+        this.analyticsData = analyticsResponse.data?.groupings;
         return analyticsResponse.data;
       } catch (error) {
         console.error('Error fetching analytics:', error);
@@ -96,51 +94,8 @@ export const useAvitoItemsStore = defineStore('avito-items', {
         this.analyticsLoading = false;
       }
     },
-
-    // Helper method to combine items with their analytics
-    combineItemsWithAnalytics(groupings: AvitoAnalyticsGrouping[]): void {
-      // Create a map for quick lookup of analytics by item ID
-      const analyticsMap = new Map<number, AvitoAnalyticsGrouping>();
-      groupings.forEach((grouping) => {
-        analyticsMap.set(grouping.id, grouping);
-      });
-
-      const res = this.items.map((item) => {
-        const grouping = analyticsMap.get(item.id);
-        if (!grouping) return item;
-
-        return {
-          ...item,
-          analytics: this.transformMetrics(grouping.metrics),
-        };
-      });
-
-      // Update items with their analytics
-      this.items = res;
-    },
-
-    // Helper method to transform metrics array to the required analytics object
-    transformMetrics(metrics: AvitoMetric[]): AvitoItemWithAnalytics['analytics'] {
-      const metricsMap = new Map<string, string>();
-
-      metrics.forEach((metric) => {
-        metricsMap.set(metric.slug, metric.value.toString());
-      });
-
-      return {
-        impressions: Number(metricsMap.get('impressions') || '0'),
-        views: Number(metricsMap.get('views') || '0'),
-        contacts: Number(metricsMap.get('contacts') || '0'),
-        viewsToContactsConversion: Number(Number(metricsMap.get('viewsToContactsConversion')) || '0').toFixed(2),
-        favorites: Number(metricsMap.get('favorites') || '0'),
-        averageViewCost: Number(Number(metricsMap.get('averageViewCost')) / 100 || '0'),
-        averageContactCost: Number(Number(metricsMap.get('averageContactCost')) / 100 || '0'),
-        impressionsToViewsConversion: Number(Number(metricsMap.get('impressionsToViewsConversion')) || '0').toFixed(2),
-        spending: Number(Number(metricsMap.get('spending')) / 100 || '0'),
-      };
-    },
     setItemsLoading(loading: boolean): void {
-      this.itemLoading = loading;
+      this.itemsLoading = loading;
     },
   },
 });

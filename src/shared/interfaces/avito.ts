@@ -14,13 +14,13 @@ export interface AvitoMeta {
 }
 
 export interface AvitoItem {
-  address: String;
+  address: string;
   category: AvitoCategory;
-  id: number;
+  id: string;
   price: number;
-  status: String;
-  title: String;
-  url: String;
+  status: string;
+  title: string;
+  url: string;
 }
 
 export interface AvitoItemWithAnalytics {
@@ -31,17 +31,18 @@ export interface AvitoItemWithAnalytics {
   status: String;
   title: String;
   url: String;
-  analytics: {
-    views: string;
-    contacts: string;
-    viewsToContactsConversion: string;
-    favorites: string;
-    averageViewCost: string;
-    averageContactCost: string;
-    impressions: string;
-    impressionsToViewsConversion: string;
-    spending;
-  };
+}
+
+export interface AvitoItemAnalytics {
+  views: string;
+  contacts: string;
+  viewsToContactsConversion: string;
+  favorites: string;
+  averageViewCost: string;
+  averageContactCost: string;
+  impressions: string;
+  impressionsToViewsConversion: string;
+  spending: string;
 }
 
 export interface AvitoCategory {
@@ -165,4 +166,43 @@ export interface AvitoGetCategoryFieldsResponse {
     };
     fields: CategoryField[];
   };
+}
+
+// types/ads.ts
+export interface AvitoFieldValue {
+  field_value_id: string;
+  value: string;
+  created_ts: string;
+}
+
+export interface AvitoAdField {
+  field_id: string;
+  tag: string;
+  data_type: string;
+  field_type: string;
+  created_ts: string;
+  values: AvitoFieldValue[];
+}
+
+export interface AvitoAd {
+  ad_id: string;
+  avito_ad_id: string;
+  parsed_id: string;
+  is_active: boolean;
+  status: string;
+  created_ts: string;
+  fields: AvitoAdField[];
+}
+
+export interface AvitoFeedAds {
+  feed_id: string;
+  account_id: string;
+  category: string;
+  created_ts: string;
+  ads: AvitoAd[];
+}
+
+export interface AvitoAdsByFeedResponse {
+  status: string;
+  data: AvitoFeedAds[];
 }

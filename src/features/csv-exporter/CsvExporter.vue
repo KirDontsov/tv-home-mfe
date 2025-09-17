@@ -22,8 +22,8 @@ export interface AvitoItemWithAnalytics {
   category: AvitoCategory;
   id: number;
   price: number;
-  status: string;
-  title: string;
+ status: string;
+ title: string;
   url: string;
   analytics: {
     views: string;
