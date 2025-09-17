@@ -39,6 +39,7 @@ export const useAvitoItemsStore = defineStore('avito-items', {
     meta: null as AvitoMeta | null,
     items: [] as AvitoAd[],
     itemsLoading: true,
+    category: null as string,
     analyticsData: null as AvitoAnalytics,
     analyticsLoading: false,
     analyticsError: null as string | null,
@@ -60,6 +61,7 @@ export const useAvitoItemsStore = defineStore('avito-items', {
           // Add ads directly to the store (no transformation needed)
           // We need to cast to AvitoAd to satisfy TypeScript
           this.items.push(...(allAds as AvitoAd[]));
+          this.category = res.data?.[0].category;
 
           // Create a mock meta object since we don't have pagination in the new structure
           this.meta = {

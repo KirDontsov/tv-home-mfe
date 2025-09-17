@@ -20,7 +20,7 @@
               <div class="shrink-0"></div>
               <div class="flex gap-4 items-center justify-between w-full ms-4">
                 <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                  {{ field.tag }}:
+                  {{ getCategoryFieldLabel(field.tag) }}:
                 </p>
                 <div v-for="value in field.values" :key="value.field_value_id" class="mt-1 overflow-hidden">
                   <p class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white truncate">
@@ -244,6 +244,7 @@ interface Props {
   item: AvitoAd;
   analyticsData: AvitoItemAnalytics[] | null;
   analyticsLoading?: boolean;
+  categoryFields?: any[]; // CategoryField[] type would be better but requires import
 }
 
 interface Emits {
@@ -318,5 +319,13 @@ const formatDate = (dateString: string): string => {
     hour: '2-digit',
     minute: '2-digit',
   });
+};
+
+// Helper function to get category field label by tag
+const getCategoryFieldLabel = (tag: string): string => {
+  if (!props.categoryFields) return tag;
+  
+  const categoryField = props.categoryFields.find((field) => field.tag === tag);
+  return categoryField ? categoryField.label : tag;
 };
 </script>

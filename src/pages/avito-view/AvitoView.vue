@@ -13,6 +13,7 @@
           :item="item"
           :analytics-data="avitoItemsStore.analyticsData"
           :analytics-loading="avitoItemsStore.analyticsLoading"
+          :category-fields="avitoCategoryFieldsStore.categoryFields"
           :key="item.ad_id"
           v-for="item in avitoItemsStore.items"
           @select="handleSelect"
@@ -25,7 +26,13 @@
 </template>
 
 <script setup>
-import { useAvitoItemFormStore, useAvitoItemsStore, useCookies, useSidebarStore } from '@/entities';
+import {
+  useAvitoItemFormStore,
+  useAvitoItemsStore,
+  useCookies,
+  useSidebarStore,
+  useAvitoCategoryFieldsStore,
+} from '@/entities';
 import PageContainer from '@/features/page-container';
 import { onMounted } from 'vue';
 import { getAvitoToken } from '@/shared/api/avito';
@@ -39,6 +46,7 @@ const { value: user_id } = useCookies('user_id');
 const sidebarStore = useSidebarStore();
 const avitoItemsStore = useAvitoItemsStore();
 const avitoItemFormStore = useAvitoItemFormStore();
+const avitoCategoryFieldsStore = useAvitoCategoryFieldsStore();
 
 onMounted(async () => {
   if (!avito_token.value) {
@@ -46,6 +54,19 @@ onMounted(async () => {
   } else {
     if (avito_token.value && user_id.value) {
       await avitoItemsStore.getAvitoItems();
+
+      // Fetch category fields for the first item's category as an example
+      // In a real implementation, you might want to fetch category fields for each unique category
+      if (avitoItemsStore.items && avitoItemsStore.items.length > 0) {
+        // For now, we'll use a placeholder category slug
+        // In a real implementation, you would determine the actual category slug for each item
+
+        console.log('avitoItemsStore', avitoItemsStore);
+        await avitoCategoryFieldsStore.getAvitoCategoryFields({
+          avito_token: avito_token.value,
+          avito_slug: avitoItemsStore.category, // This should be replaced with actual category slug
+        });
+      }
 
       await avitoItemsStore.getItemsAnalytics({
         avito_token: avito_token.value,
