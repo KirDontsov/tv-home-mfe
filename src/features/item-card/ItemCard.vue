@@ -238,13 +238,14 @@
 </template>
 
 <script setup lang="ts">
-import type { AvitoAd, AvitoItemAnalytics } from '@/shared/interfaces/avito';
+import type { AvitoAd, AvitoItemAnalytics, CategoryField } from '@/shared/interfaces/avito';
 
 interface Props {
   item: AvitoAd;
+  // TODO: fix types
   analyticsData: AvitoItemAnalytics[] | null;
   analyticsLoading?: boolean;
-  categoryFields?: any[]; // CategoryField[] type would be better but requires import
+  categoryFields?: CategoryField[]; // CategoryField[] type would be better but requires import
 }
 
 interface Emits {

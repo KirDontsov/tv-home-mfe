@@ -1,11 +1,10 @@
 <template>
   <div :class="{ 'sm:ml-[64px]': expanded === 'false' }" class="sm:ml-64 p-4 relative top-[78px]">
     <div class="grid grid-cols-1 gap-4">
-      <div
-        v-if="loading"
-        class="flex flex-col gap-2 justify-center mb-4 rounded-sm bg-gray-50 dark:bg-gray-700 px-8 py-4"
-      >
-        Loading...
+      <!-- Show loader when analytics are loading -->
+      <div v-if="loading" class="flex justify-center items-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+        <span class="ml-2 text-gray-700 dark:text-gray-300">Загрузка аналитики...</span>
       </div>
       <slot v-else name="body" />
     </div>
