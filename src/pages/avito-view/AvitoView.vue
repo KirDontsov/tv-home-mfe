@@ -53,7 +53,7 @@ onMounted(async () => {
     await getAvitoToken();
   } else {
     if (avito_token.value && user_id.value) {
-      await avitoItemsStore.getAvitoItems();
+      await avitoItemsStore.getAvitoItems({ page: 1, limit: 20 });
 
       // Fetch category fields for the first item's category as an example
       // In a real implementation, you might want to fetch category fields for each unique category
@@ -93,7 +93,9 @@ onMounted(async () => {
   }
 });
 
-const handleSelect = (value) => avitoItemFormStore.setSelected(value);
+const handleSelect = (value) => {
+  avitoItemFormStore.setSelected(value);
+};
 </script>
 
 <style></style>

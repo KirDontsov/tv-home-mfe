@@ -46,21 +46,13 @@ export const useAvitoItemsStore = defineStore('avito-items', {
   }),
 
   actions: {
-    async getAvitoItems(): Promise<AvitoAdsByFeedResponse | null> {
+    async getAvitoItems({ page, limit }): Promise<AvitoAdsByFeedResponse | null> {
       try {
         this.itemsLoading = true;
-        const res = await getAvitoItems();
+        const res = await getAvitoItems({ page, limit });
 
         if (res && res.status === 'success') {
-          // Flatten all ads from all feeds
-          const allAds: AvitoAd[] = [];
-          res.data.forEach((feed) => {
-            allAds.push(...feed.ads);
-          });
-
-          // Add ads directly to the store (no transformation needed)
-          // We need to cast to AvitoAd to satisfy TypeScript
-          this.items.push(...(allAds as AvitoAd[]));
+          this.items.push(...(res.data?.ads as AvitoAd[]));
           this.category = res.data?.[0].category;
 
           // Create a mock meta object since we don't have pagination in the new structure

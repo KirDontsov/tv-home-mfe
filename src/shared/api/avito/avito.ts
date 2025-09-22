@@ -20,9 +20,9 @@ export const getAvitoToken = async () => {
   }
 };
 
-export const getAvitoItems = async () => {
+export const getAvitoItems = async ({ page, limit }) => {
   try {
-    const res = await fetch(`${BACKEND_PORT}/api/avito/ads_by_feed`, {
+    const res = await fetch(`${BACKEND_PORT}/api/avito/get_feed?page=${page}&limit=${limit}`, {
       headers: { 'Content-Type': 'application/json' },
       method: 'GET',
       credentials: 'include',

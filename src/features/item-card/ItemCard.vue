@@ -35,6 +35,69 @@
       
       <!-- Right column - Basic item info -->
       <div class="flex flex-col  gap-6">
+        <!-- Image Carousel -->
+        <div v-if="imageUrls.length > 0" class="mb-6">
+          <div class="relative overflow-hidden rounded-lg">
+            <!-- Carousel container -->
+            <div
+              class="flex transition-transform duration-500 ease-in-out"
+              :style="{ transform: `translateX(-${currentImageIndex * 100}%)` }"
+            >
+              <div
+                v-for="(imageUrl, index) in imageUrls"
+                :key="index"
+                class="w-full flex-shrink-0"
+              >
+                <img
+                  :src="imageUrl"
+                  :alt="`Item image ${index + 1}`"
+                  class="w-full h-64 object-cover bg-gray-100"
+                  @error="handleImageError"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            <!-- Navigation arrows -->
+            <button
+              v-if="imageUrls.length > 1"
+              @click.stop="prevImage"
+              class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all"
+              aria-label="Previous image"
+            >
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14 8-4 4 4 4"/>
+              </svg>
+
+            </button>
+
+            <button
+              v-if="imageUrls.length > 1"
+              @click.stop="nextImage"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all"
+              aria-label="Next image"
+            >
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10 16 4-4-4-4"/>
+              </svg>
+
+            </button>
+
+            <!-- Indicators -->
+            <div v-if="imageUrls.length > 1" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              <button
+                v-for="(_, index) in imageUrls"
+                :key="index"
+                @click.stop="goToImage(index)"
+                :class="[
+              'w-3 h-3 rounded-full transition-all',
+              index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+            ]"
+                :aria-label="`Go to image ${index + 1}`"
+              />
+            </div>
+          </div>
+        </div>
         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-600">
           <li class="py-3 sm:py-4">
             <div class="flex items-center">
@@ -239,6 +302,7 @@
 
 <script setup lang="ts">
 import type { AvitoAd, AvitoItemAnalytics, CategoryField } from '@/shared/interfaces/avito';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 interface Props {
   item: AvitoAd;
@@ -254,7 +318,75 @@ interface Emits {
 
 const props = defineProps<Props>();
 
+console.log('item', props.item);
+
 const emit = defineEmits<Emits>();
+
+// Carousel state
+const currentImageIndex = ref(0);
+const carouselInterval = ref<NodeJS.Timeout | null>(null);
+
+// Extract image URLs from the item fields
+const imageUrls = computed(() => {
+  const imagesField = props.item.fields?.find(field => field.tag === 'Images');
+  if (imagesField && imagesField.values.length > 0) {
+    const imagesValue = imagesField.values[0].value;
+    // Split comma-separated URLs and filter out empty strings
+    return imagesValue.split(',').filter(url => url.trim() !== '');
+  }
+  return [];
+});
+
+// Carousel navigation functions
+const nextImage = () => {
+  if (imageUrls.value.length > 0) {
+    currentImageIndex.value = (currentImageIndex.value + 1) % imageUrls.value.length;
+  }
+};
+
+const prevImage = () => {
+  if (imageUrls.value.length > 0) {
+    currentImageIndex.value =
+      currentImageIndex.value === 0
+        ? imageUrls.value.length - 1
+        : currentImageIndex.value - 1;
+  }
+};
+
+const goToImage = (index: number) => {
+  currentImageIndex.value = index;
+};
+
+// Handle image loading errors
+const handleImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement;
+  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2NjYyIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4=';
+};
+
+// Auto-rotate carousel
+const startCarousel = () => {
+  if (imageUrls.value.length > 1) {
+    carouselInterval.value = setInterval(() => {
+      nextImage();
+    }, 5000); // Change image every 5 seconds
+  }
+};
+
+const stopCarousel = () => {
+  if (carouselInterval.value) {
+    clearInterval(carouselInterval.value);
+    carouselInterval.value = null;
+  }
+};
+
+// Lifecycle hooks
+onMounted(() => {
+  startCarousel();
+});
+
+onUnmounted(() => {
+  stopCarousel();
+});
 
 const handleSelect = ({ currentTarget }) => {
   emit('select', currentTarget.id);

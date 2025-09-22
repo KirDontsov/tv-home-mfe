@@ -4,7 +4,7 @@
       <!-- Show loader when analytics are loading -->
       <div v-if="loading" class="flex justify-center items-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
-        <span class="ml-2 text-gray-700 dark:text-gray-300">Загрузка аналитики...</span>
+        <span class="ml-2 text-gray-700 dark:text-gray-300">Загрузка...</span>
       </div>
       <slot v-else name="body" />
     </div>
