@@ -36,7 +36,7 @@ export interface AvitoMetric {
 
 export const useAvitoItemsStore = defineStore('avito-items', {
   state: () => ({
-    meta: null as AvitoMeta | null,
+    pagination: null as AvitoMeta | null,
     items: [] as AvitoAd[],
     itemsLoading: true,
     category: null as string,
@@ -49,17 +49,28 @@ export const useAvitoItemsStore = defineStore('avito-items', {
     async getAvitoItems({ page, limit }): Promise<AvitoAdsByFeedResponse | null> {
       try {
         this.itemsLoading = true;
+
         const res = await getAvitoItems({ page, limit });
 
         if (res && res.status === 'success') {
-          this.items.push(...(res.data?.ads as AvitoAd[]));
-          this.category = res.data?.[0].category;
+          this.items = (res.data?.ads as AvitoAd[]) || [];
+          this.category = res.data?.[0]?.category;
 
-          // Create a mock meta object since we don't have pagination in the new structure
-          this.meta = {
-            page: 1,
-            per_page: allAds.length,
-          };
+          // Use the meta from the response if available, otherwise create a mock
+          if (res?.pagination) {
+            // If the response has a meta object, use it
+            this.pagination = {
+              page: res?.pagination.page || page,
+              per_page: res?.pagination.limit || limit,
+              total_items: res?.pagination.total || 0,
+            };
+          } else {
+            this.pagination = {
+              page: page,
+              per_page: limit,
+              total_items: 0, // We don't know the total items yet
+            };
+          }
         }
 
         return res;

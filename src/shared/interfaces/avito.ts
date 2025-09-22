@@ -11,6 +11,7 @@ export interface AvitoGetItemsResponse {
 export interface AvitoMeta {
   page: number;
   per_page: number;
+  total_items?: number;
 }
 
 export interface AvitoItem {
