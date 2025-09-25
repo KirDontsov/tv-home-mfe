@@ -1,6 +1,6 @@
 <template>
   <nav aria-label="Page navigation example">
-    <ul class="flex items-center -space-x-px h-8 text-sm">
+    <ul class="flex items-center -space-x-px h-8 text-sm gap-2">
       <!-- Previous button -->
       <li>
         <button
@@ -114,7 +114,7 @@ watch(
   (newTotalItems) => {
     paginationStore.setTotalItems(newTotalItems);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -125,7 +125,7 @@ watch(
       paginationStore.setItemsPerPage(newItemsPerPage);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // Computed properties from the store
@@ -170,7 +170,7 @@ const visiblePages = computed(() => {
   if (current < pageCount - 3) {
     // Show ellipsis if current page is far from end
     pages.push('...');
- }
+  }
 
   // Always show last page
   if (pageCount > 1) {
