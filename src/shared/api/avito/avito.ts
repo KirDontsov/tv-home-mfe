@@ -162,3 +162,23 @@ export const getAvitoCategoryFields = async ({ avito_token, avito_slug }: AvitoC
     console.log(e);
   }
 };
+
+export async function sendAvitoCompetitorsRequest(data) {
+  try {
+    const res = await fetch(`${BACKEND_PORT}/api/avito_requests/6a9a4e3c-dbbe-44af-ba17-aeeff601226d`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify({
+        request: data.request,
+        city: data.city,
+        coords: data.coords || '',
+        radius: data.radius || '',
+        district: data.district || '',
+      }),
+    });
+    return res;
+  } catch (e) {
+    throw e;
+  }
+}
