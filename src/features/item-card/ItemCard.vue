@@ -15,7 +15,10 @@
       <div>
         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-600">
           <!-- Display all fields from item -->
-          <li v-for="field in item.fields" :key="field.field_id" class="py-3 sm:py-4">
+          <li
+            v-for="field in item.fields"
+            :key="field.field_id"
+            class="py-3 sm:py-4">
             <div class="flex items-start">
               <div class="shrink-0"></div>
               <div class="flex gap-4 items-center justify-between w-full ms-4">

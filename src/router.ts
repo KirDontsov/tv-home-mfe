@@ -7,7 +7,9 @@ import FirmsView from '@/pages/firms-view';
 import AvitoView from '@/pages/avito-view';
 import AvitoEditor from '@/pages/avito-editor';
 import AvitoCreate from '@/pages/avito-create';
-import AvitoCompetitorsAnalytics from '@/pages/avito-competitors-analytics';
+import AvitoAnalyticsRequests from '@/pages/avito-competitors-analytics';
+import AvitoAnalytics from '@/pages/avito-analytics';
+import AvitoAnalyticsDetails from '@/pages/avito-analytics-details';
 
 const isAuthenticated = async (to, from, next) => {
   try {
@@ -47,8 +49,23 @@ const routes = [
     },
   },
   {
-    path: '/avito-competitors-analytics',
-    component: AvitoCompetitorsAnalytics,
+    path: '/avito-analytics-requests',
+    component: AvitoAnalyticsRequests,
+    beforeEnter: (to, from, next) => {
+      isAuthenticated(to, from, next);
+    },
+  },
+  {
+    path: '/avito-analytics',
+    component: AvitoAnalytics,
+    beforeEnter: (to, from, next) => {
+      isAuthenticated(to, from, next);
+    },
+  },
+  {
+    path: '/avito-analytics/:id',
+    component: AvitoAnalyticsDetails,
+    props: true,
     beforeEnter: (to, from, next) => {
       isAuthenticated(to, from, next);
     },

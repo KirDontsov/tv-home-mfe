@@ -1,3 +1,3 @@
-import AvitoCompetitorsAnalytics from './AvitoCompetitorsAnalytics.vue';
+import AvitoAnalyticsRequests from './AvitoAnalyticsRequests.vue';
 
-export default AvitoCompetitorsAnalytics;
+export default AvitoAnalyticsRequests;

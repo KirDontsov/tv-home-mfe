@@ -182,3 +182,29 @@ export async function sendAvitoCompetitorsRequest(data) {
     throw e;
   }
 }
+
+export async function getAvitoAnalyticsAds(avitoRequestId: string) {
+  try {
+    const res = await fetch(`${BACKEND_PORT}/api/avito_requests/${avitoRequestId}/ads`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+      credentials: 'include',
+    });
+    return res;
+  } catch (e) {
+    throw e;
+  }
+}
+
+export async function getAvitoRequests() {
+  try {
+    const res = await fetch(`${BACKEND_PORT}/api/avito_requests`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+      credentials: 'include',
+    });
+    return res;
+  } catch (e) {
+    throw e;
+ }
+}
