@@ -163,7 +163,7 @@ export const getAvitoCategoryFields = async ({ avito_token, avito_slug }: AvitoC
   }
 };
 
-export async function sendAvitoCompetitorsRequest(data) {
+export async function createAvitoAnalyticsRequest(data) {
   try {
     const res = await fetch(`${BACKEND_PORT}/api/avito_requests/6a9a4e3c-dbbe-44af-ba17-aeeff601226d`, {
       headers: { 'Content-Type': 'application/json' },

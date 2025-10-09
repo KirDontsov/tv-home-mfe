@@ -7,9 +7,9 @@ import FirmsView from '@/pages/firms-view';
 import AvitoView from '@/pages/avito-view';
 import AvitoEditor from '@/pages/avito-editor';
 import AvitoCreate from '@/pages/avito-create';
-import AvitoAnalyticsRequests from '@/pages/avito-competitors-analytics';
 import AvitoAnalytics from '@/pages/avito-analytics';
-import AvitoAnalyticsDetails from '@/pages/avito-analytics-details';
+import CreateAvitoAnalyticsRequest from '@/pages/avito-analytics/create-avito-analytics-request';
+import AvitoAnalyticsDetails from '@/pages/avito-analytics/avito-analytics-details';
 
 const isAuthenticated = async (to, from, next) => {
   try {
@@ -49,15 +49,15 @@ const routes = [
     },
   },
   {
-    path: '/avito-analytics-requests',
-    component: AvitoAnalyticsRequests,
+    path: '/avito-analytics',
+    component: AvitoAnalytics,
     beforeEnter: (to, from, next) => {
       isAuthenticated(to, from, next);
     },
   },
   {
-    path: '/avito-analytics',
-    component: AvitoAnalytics,
+    path: '/avito-analytics/create',
+    component: CreateAvitoAnalyticsRequest,
     beforeEnter: (to, from, next) => {
       isAuthenticated(to, from, next);
     },
