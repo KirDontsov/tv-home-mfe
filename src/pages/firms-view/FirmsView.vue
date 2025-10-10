@@ -1,5 +1,5 @@
 <template>
-  <PageContainer :expanded="sidebarStore.expanded.value">
+  <PageContainer>
     <template #body>
       <div class="grid grid-cols-2 gap-4">
         <div class="flex flex-col gap-2 justify-center mb-4 rounded-sm bg-gray-50 dark:bg-gray-700 px-8 py-4">
@@ -61,10 +61,8 @@
 <script setup>
 import { watch, onMounted, computed } from 'vue';
 import { useCitiesStore, useCategoriesStore, useCityStore, useCategoryStore, useFirmsStore } from '../../entities';
-import { useSidebarStore } from '@/entities';
 import PageContainer from '@/features/page-container';
 
-const sidebarStore = useSidebarStore();
 
 const citiesStore = useCitiesStore();
 const categoriesStore = useCategoriesStore();

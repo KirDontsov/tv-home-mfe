@@ -208,3 +208,16 @@ export async function getAvitoRequests() {
     throw e;
  }
 }
+
+export async function downloadAvitoRequestCsv(avitoRequestId: string) {
+  try {
+    const res = await fetch(`${BACKEND_PORT}/api/avito_requests/${avitoRequestId}/ads/csv`, {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
+      credentials: 'include',
+    });
+    return res;
+  } catch (e) {
+    throw e;
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-  <PageContainer :loading="avitoItemsStore.itemsLoading" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="avitoItemsStore.itemsLoading">
     <template #body>
       <CsvExporter
         v-if="avitoItemsStore.items?.length > 0 && !avitoItemsStore.itemsLoading"
@@ -38,9 +38,8 @@
 <script setup>
 import {
   useAvitoItemFormStore,
-  useAvitoItemsStore,
+ useAvitoItemsStore,
   useCookies,
-  useSidebarStore,
   useAvitoCategoryFieldsStore,
 } from '@/entities';
 import PageContainer from '@/features/page-container';
@@ -54,7 +53,6 @@ import ItemForm from '@/features/item-form/index.js';
 const { value: avito_token } = useCookies('avito_token');
 const { value: user_id } = useCookies('user_id');
 
-const sidebarStore = useSidebarStore();
 const avitoItemsStore = useAvitoItemsStore();
 const avitoItemFormStore = useAvitoItemFormStore();
 const avitoCategoryFieldsStore = useAvitoCategoryFieldsStore();

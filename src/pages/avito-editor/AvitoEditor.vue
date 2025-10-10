@@ -1,5 +1,5 @@
 <template>
-  <PageContainer :loading="avitoCategoriesStore.categoriesLoading" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="avitoCategoriesStore.categoriesLoading">
     <template #body>
       <div
         v-if="!avitoCategoriesStore.categoriesLoading"
@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { useCookies, useSidebarStore, useAvitoCategoriesStore } from '@/entities';
+import { useCookies, useAvitoCategoriesStore } from '@/entities';
 import { onMounted } from 'vue';
 import { getAvitoToken } from '@/shared/api/avito';
 import { useRouter } from 'vue-router';
@@ -90,7 +90,6 @@ const router = useRouter();
 const { value: avito_token } = useCookies('avito_token');
 const { value: user_id } = useCookies('user_id');
 
-const sidebarStore = useSidebarStore();
 const avitoCategoriesStore = useAvitoCategoriesStore();
 
 const handleSelectCategory = (levelIndex, category) => {

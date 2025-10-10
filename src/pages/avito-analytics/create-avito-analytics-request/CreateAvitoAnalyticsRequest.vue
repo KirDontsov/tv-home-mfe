@@ -1,6 +1,6 @@
 <!-- components/AvitoCompetitorsAnalytics.vue -->
 <template>
-  <PageContainer :loading="loading" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="loading">
     <template #body>
       <div
         class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-700 dark:border-gray-600"
@@ -111,11 +111,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useSidebarStore } from '@/entities';
 import PageContainer from '@/features/page-container';
 import { createAvitoAnalyticsRequest } from '@/shared/api/avito';
+import { useRouter } from 'vue-router';
 
-const sidebarStore = useSidebarStore();
+const router = useRouter();
 
 interface FormData {
   request: string;
@@ -133,18 +133,6 @@ const initialFormData: FormData = {
   district: '',
 };
 
-// Progress tracking
-interface ProgressData {
-  task_id: string;
-  user_id: string;
-  progress: number;
-  total_ads: number;
-  current_ads: number;
-  status: string;
-  message: string;
-  timestamp: string;
-}
-
 const formData = ref<FormData>({ ...initialFormData });
 const loading = ref(false);
 
@@ -155,8 +143,8 @@ const handleSubmit = async () => {
     const response = await createAvitoAnalyticsRequest(formData.value);
 
     if (response.ok) {
-      const responseData = await response.json();
-      console.log('Response:', responseData);
+      router.push(`/avito-analytics`);
+      // router.push(`/avito-analytics/${response?.requestId}`);
     } else {
       alert('Произошла ошибка при отправке запроса');
     }

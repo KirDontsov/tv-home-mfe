@@ -1,5 +1,5 @@
 <template>
-  <PageContainer :loading="selectedFirmStore.firmLoading && !firm" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="selectedFirmStore.firmLoading && !firm">
     <template #body>
       <div v-if="firm?.name">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -171,12 +171,10 @@ import { useRoute } from 'vue-router';
 import { useSelectedFirmStore } from '@/entities';
 import { storeToRefs } from 'pinia';
 import { updateFirm } from '@/shared/api';
-import { useSidebarStore } from '@/entities';
 import PageContainer from '@/features/page-container';
 
 const route = useRoute();
 const selectedFirmStore = useSelectedFirmStore();
-const sidebarStore = useSidebarStore();
 
 const { firm } = storeToRefs(selectedFirmStore);
 

@@ -1,6 +1,6 @@
 <!-- components/AvitoAnalytics.vue -->
 <template>
-  <PageContainer :loading="avitoAnalyticsAdsStore.loading" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="avitoAnalyticsAdsStore.loading">
     <template #body>
       <div
         class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-700 dark:border-gray-600"
@@ -45,17 +45,72 @@
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" class="px-6 py-3 font-medium">Дата сканирования</th>
-                <th scope="col" class="px-6 py-3 font-medium">Запрос</th>
-                <th scope="col" class="px-6 py-3 font-medium">Город</th>
-                <th scope="col" class="px-6 py-3 font-medium">Координаты</th>
-                <th scope="col" class="px-6 py-3 font-medium">Радиус</th>
-                <th scope="col" class="px-6 py-3 font-medium">Район</th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('createdTs')"
+                >
+                  Дата сканирования
+                  <span v-if="sortColumn === 'createdTs'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('request')"
+                >
+                  Запрос
+                  <span v-if="sortColumn === 'request'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('city')"
+                >
+                  Город
+                  <span v-if="sortColumn === 'city'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('coords')"
+                >
+                  Координаты
+                  <span v-if="sortColumn === 'coords'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('radius')"
+                >
+                  Радиус
+                  <span v-if="sortColumn === 'radius'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('district')"
+                >
+                  Район
+                  <span v-if="sortColumn === 'district'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th scope="col" class="px-6 py-3 font-medium">Действия</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="(request, index) in avitoAnalyticsAdsStore.requests"
+                v-for="(request, index) in sortedRequests"
                 :key="request.request_id"
                 @click="selectRequest(request.request_id)"
                 :class="{
@@ -71,6 +126,9 @@
                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ request.coords || 'N/A' }}</td>
                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ request.radius || 'N/A' }}</td>
                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ request.district || 'N/A' }}</td>
+                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                  <CsvDownloadButton :request-id="request.request_id" />
+                </td>
               </tr>
             </tbody>
           </table>
@@ -96,15 +154,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useSidebarStore } from '@/entities';
 import { useAvitoAnalyticsAdsStore } from '@/entities/avito-analytics-ads';
 import PageContainer from '@/features/page-container';
+import { CsvDownloadButton } from '@/features/csv-download-button';
 
 const router = useRouter();
-const sidebarStore = useSidebarStore();
 const avitoAnalyticsAdsStore = useAvitoAnalyticsAdsStore();
+
+// Sorting state
+const sortColumn = ref<string | null>(null);
+const sortDirection = ref<'asc' | 'desc'>('asc');
 
 const selectRequest = async (requestId: string) => {
   avitoAnalyticsAdsStore.selectRequest(requestId);
@@ -126,6 +187,76 @@ const formatDate = (dateString: string | null) => {
     minute: '2-digit',
   });
 };
+
+// Sorting function
+const sortTable = (column: string) => {
+  if (sortColumn.value === column) {
+    // If clicking the same column, toggle direction
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    // If clicking a new column, set it as the sort column with ascending direction
+    sortColumn.value = column;
+    sortDirection.value = 'asc';
+  }
+};
+
+// Computed property for sorted requests
+const sortedRequests = computed(() => {
+  if (!sortColumn.value) {
+    return avitoAnalyticsAdsStore.requests;
+  }
+
+  return [...avitoAnalyticsAdsStore.requests].sort((a, b) => {
+    // Get the values to compare
+    let valA = a[sortColumn.value as keyof typeof a];
+    let valB = b[sortColumn.value as keyof typeof b];
+
+    // Handle null values
+    if (valA === null && valB === null) return 0;
+    if (valA === null) return sortDirection.value === 'asc' ? 1 : -1;
+    if (valB === null) return sortDirection.value === 'asc' ? -1 : 1;
+
+    // Convert to string for comparison if not already
+    if (typeof valA !== 'string' && typeof valA !== 'number') valA = String(valA);
+    if (typeof valB !== 'string' && typeof valB !== 'number') valB = String(valB);
+
+    // For date comparison
+    if (sortColumn.value === 'createdTs') {
+      const dateA = new Date(valA as string);
+      const dateB = new Date(valB as string);
+      if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+        // If dates are invalid, compare as strings
+        valA = String(valA);
+        valB = String(valB);
+      } else {
+        if (sortDirection.value === 'asc') {
+          return dateA.getTime() - dateB.getTime();
+        } else {
+          return dateB.getTime() - dateA.getTime();
+        }
+      }
+    }
+
+    // String comparison
+    if (typeof valA === 'string' && typeof valB === 'string') {
+      const comparison = valA.localeCompare(valB, undefined, { numeric: true });
+      return sortDirection.value === 'asc' ? comparison : -comparison;
+    }
+
+    // Number comparison
+    if (typeof valA === 'number' && typeof valB === 'number') {
+      if (sortDirection.value === 'asc') {
+        return valA - valB;
+      } else {
+        return valB - valA;
+      }
+    }
+
+    // Fallback to string comparison
+    const comparison = String(valA).localeCompare(String(valB), undefined, { numeric: true });
+    return sortDirection.value === 'asc' ? comparison : -comparison;
+  });
+});
 
 onMounted(async () => {
   await avitoAnalyticsAdsStore.fetchRequests();

@@ -321,8 +321,6 @@ interface Emits {
 
 const props = defineProps<Props>();
 
-console.log('item', props.item);
-
 const emit = defineEmits<Emits>();
 
 // Carousel state

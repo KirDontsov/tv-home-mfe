@@ -1,20 +1,26 @@
 <!-- components/AvitoAnalyticsDetails.vue -->
 <template>
-  <PageContainer :loading="avitoAnalyticsAdsStore.loading" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="avitoAnalyticsAdsStore.loading">
     <template #body>
       <div
         class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-700 dark:border-gray-600"
       >
-        <div class="flex items-center gap-4">
-          <h2 class="text-xl font-semibold text-gray-80 dark:text-white mb-6">
-            Детали: {{ selectedRequest?.createdTs ? formatDate(selectedRequest.createdTs) : '' }}
-          </h2>
-          <h2 class="text-xl font-semibold text-gray-80 dark:text-white mb-6">
-            {{ selectedRequest?.city }}
-          </h2>
-          <h2 class="text-xl font-semibold text-gray-80 dark:text-white mb-6">
-            {{ selectedRequest?.request }}
-          </h2>
+        <div class="flex items-center justify-between gap-4 mb-6">
+          <div class="flex items-center gap-4">
+            <h2 class="text-xl font-semibold text-gray-80 dark:text-white">
+              {{ selectedRequest?.createdTs ? formatDate(selectedRequest.createdTs) : '' }}
+            </h2>
+            <h2 class="text-xl font-semibold text-gray-80 dark:text-white">
+              {{ selectedRequest?.city }}
+            </h2>
+            <h2 class="text-xl font-semibold text-gray-80 dark:text-white">
+              {{ selectedRequest?.request }}
+            </h2>
+          </div>
+          <CsvDownloadButton
+            :request-id="route.params.id as string"
+            button-class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors duration-200"
+          />
         </div>
 
         <!-- Error message -->
@@ -34,27 +40,216 @@
             <thead class="text-xs text-gray-700 bg-gray-50 uppercase dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-3 py-3 font-medium">ID объявления</th>
-                <th scope="col" class="px-3 py-3 font-medium">Название</th>
-                <th scope="col" class="px-3 py-3 font-medium">Цена</th>
-                <th scope="col" class="px-3 py-3 font-medium">Позиция</th>
-                <th scope="col" class="px-3 py-3 font-medium">Просмотры</th>
-                <th scope="col" class="px-3 py-3 font-medium">Продвижение</th>
-                <th scope="col" class="px-3 py-3 font-medium">Город</th>
-                <th scope="col" class="px-3 py-3 font-medium">Дата объявления</th>
-                <th scope="col" class="px-3 py-3 font-medium">Категории</th>
-                <th scope="col" class="px-3 py-3 font-medium">Имя продавца</th>
-                <th scope="col" class="px-3 py-3 font-medium">Тип продавца</th>
-                <th scope="col" class="px-3 py-3 font-medium">Рейтинг</th>
-                <th scope="col" class="px-3 py-3 font-medium">Кол-во отзывов</th>
-                <th scope="col" class="px-3 py-3 font-medium">Кол-во фото</th>
-                <th scope="col" class="px-3 py-3 font-medium">Адрес</th>
-                <th scope="col" class="px-3 py-3 font-medium">Описание</th>
-                <th scope="col" class="px-3 py-3 font-medium">Доставка</th>
-                <th scope="col" class="px-3 py-3 font-medium">Кол-во об.</th>
-                <th scope="col" class="px-3 py-3 font-medium">Кол-во закрытых об.</th>
-                <th scope="col" class="px-3 py-3 font-medium">Дата создания</th>
-                <th scope="col" class="px-3 py-3 font-medium">Время ответа</th>
-                <th scope="col" class="px-3 py-3 font-medium">Дата регистрации</th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('title')"
+                >
+                  Название
+                  <span v-if="sortColumn === 'title'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('price')"
+                >
+                  Цена
+                  <span v-if="sortColumn === 'price'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('position')"
+                >
+                  Позиция
+                  <span v-if="sortColumn === 'position'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('views')"
+                >
+                  Просмотры
+                  <span v-if="sortColumn === 'views'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('promotion')"
+                >
+                  Продвижение
+                  <span v-if="sortColumn === 'promotion'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('city_query')"
+                >
+                  Город
+                  <span v-if="sortColumn === 'city_query'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('ad_date')"
+                >
+                  Дата
+                  <span v-if="sortColumn === 'ad_date'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('categories')"
+                >
+                  Категории
+                  <span v-if="sortColumn === 'categories'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('seller_name')"
+                >
+                  Имя продавца
+                  <span v-if="sortColumn === 'seller_name'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-10 dark:hover:bg-gray-600"
+                  @click="sortTable('seller_type')"
+                >
+                  Тип продавца
+                  <span v-if="sortColumn === 'seller_type'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('rating')"
+                >
+                  Рейтинг
+                  <span v-if="sortColumn === 'rating'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('reviews_count')"
+                >
+                  Кол-во отзывов
+                  <span v-if="sortColumn === 'reviews_count'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('photo_count')"
+                >
+                  Кол-во фото
+                  <span v-if="sortColumn === 'photo_count'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('address')"
+                >
+                  Адрес
+                  <span v-if="sortColumn === 'address'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('description')"
+                >
+                  Описание
+                  <span v-if="sortColumn === 'description'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-10 dark:hover:bg-gray-600"
+                  @click="sortTable('delivery')"
+                >
+                  Доставка
+                  <span v-if="sortColumn === 'delivery'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('ads_count')"
+                >
+                  Кол-во об.
+                  <span v-if="sortColumn === 'ads_count'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-10 dark:hover:bg-gray-600"
+                  @click="sortTable('closed_ads_count')"
+                >
+                  Кол-во закрытых об.
+                  <span v-if="sortColumn === 'closed_ads_count'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('created_ts')"
+                >
+                  Дата создания
+                  <span v-if="sortColumn === 'created_ts'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('answer_time')"
+                >
+                  Время ответа
+                  <span v-if="sortColumn === 'answer_time'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  @click="sortTable('register_date')"
+                >
+                  Дата регистрации
+                  <span v-if="sortColumn === 'register_date'" class="ml-1">
+                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -63,7 +258,7 @@
                 :key="ad.ad_id"
                 :class="[
                   'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600',
-                  ad.my_ad ? 'border-2 border-blue-500 dark:border-blue-400' : '',
+                  ad.my_ad === '*' ? 'bg-blue-50 dark:bg-green-900 dark:hover:bg-green-800' : '',
                 ]"
               >
                 <td class="px-3 py-2 font-medium text-gray-900 dark:text-white max-w-xs truncate" :title="ad.ad_id">
@@ -122,7 +317,7 @@
                 <td class="px-3 py-2 font-medium text-gray-900 dark:text-white">{{ ad.ads_count || 'N/A' }}</td>
                 <td class="px-3 py-2 font-medium text-gray-900 dark:text-white">{{ ad.closed_ads_count || 'N/A' }}</td>
                 <td class="px-3 py-2 font-medium text-gray-900 dark:text-white">
-                  {{ ad.created_ts ? formatDate(ad.created_ts) : 'N/A' }}
+                  {{ ad.createdTs ? formatDate(ad.createdTs) : 'N/A' }}
                 </td>
                 <td class="px-3 py-2 font-medium text-gray-900 dark:text-white">{{ ad.answer_time || 'N/A' }}</td>
                 <td class="px-3 py-2 font-medium text-gray-900 dark:text-white">{{ ad.register_date || 'N/A' }}</td>
@@ -245,14 +440,13 @@
 <script setup lang="ts">
 import { onMounted, computed, ref, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useSidebarStore } from '@/entities';
 import { useAvitoAnalyticsAdsStore } from '@/entities/avito-analytics-ads';
 import PageContainer from '@/features/page-container';
 import TextPopup from '@/shared/components/TextPopup.vue';
 import PromotionDisplay from '@/shared/components/PromotionDisplay.vue';
+import { CsvDownloadButton } from '@/features/csv-download-button';
 
 const route = useRoute();
-const sidebarStore = useSidebarStore();
 const avitoAnalyticsAdsStore = useAvitoAnalyticsAdsStore();
 
 // WebSocket connection
@@ -276,6 +470,10 @@ interface ProgressData {
 
 const progressData = ref<ProgressData | null>(null);
 const showProgress = ref(false);
+
+// Sorting state
+const sortColumn = ref<string | null>(null);
+const sortDirection = ref<'asc' | 'desc'>('asc');
 
 // Find the selected request from the store requests
 const selectedRequest = computed(() => {
@@ -399,6 +597,61 @@ const calculateProgressPercentage = () => {
   // Fallback to the progress field if total_ads is 0 or invalid, but cap it at 10%
   const progressPercentage = progressData.value.progress * 100;
   return Math.min(Math.round(progressPercentage), 100);
+};
+
+// Sorting function
+const sortTable = (column: string) => {
+  // If clicking the same column, toggle direction; otherwise, set to ascending
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = 'asc';
+  }
+
+  // Sort the ads data
+  if (avitoAnalyticsAdsStore.ads) {
+    avitoAnalyticsAdsStore.ads.sort((a, b) => {
+      // Get the values to compare based on the column
+      let valA: any = a[column];
+      let valB: any = b[column];
+
+      // Handle special cases for different data types
+      if (
+        column === 'price' ||
+        column === 'position' ||
+        column === 'views' ||
+        column === 'rating' ||
+        column === 'reviews_count' ||
+        column === 'photo_count' ||
+        column === 'ads_count' ||
+        column === 'closed_ads_count' ||
+        column === 'answer_time'
+      ) {
+        // Convert to numbers for numeric comparison
+        valA = parseFloat(valA) || 0;
+        valB = parseFloat(valB) || 0;
+      } else if (column === 'ad_date' || column === 'createdTs' || column === 'register_date') {
+        // Convert to dates for date comparison
+        valA = new Date(valA) || new Date(0);
+        valB = new Date(valB) || new Date(0);
+      } else {
+        // For string values, ensure they're strings
+        valA = valA ? String(valA).toLowerCase() : '';
+        valB = valB ? String(valB).toLowerCase() : '';
+      }
+
+      // Perform comparison based on sort direction
+      if (sortDirection.value === 'asc') {
+        if (valA < valB) return -1;
+        if (valA > valB) return 1;
+      } else {
+        if (valA > valB) return -1;
+        if (valA < valB) return 1;
+      }
+      return 0;
+    });
+  }
 };
 </script>
 

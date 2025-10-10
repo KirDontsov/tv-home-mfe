@@ -1,6 +1,6 @@
 <!-- components/AvitoItemForm.vue -->
 <template>
-  <PageContainer :loading="avitoCategoryFieldsStore.categoryFieldsLoading" :expanded="sidebarStore.expanded.value">
+  <PageContainer :loading="avitoCategoryFieldsStore.categoryFieldsLoading">
     <template #body>
       <div
         class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-700 dark:border-gray-600"
@@ -238,7 +238,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCookies, useSidebarStore, useAvitoCategoriesStore, useAvitoCategoryFieldsStore } from '@/entities';
+import { useCookies, useAvitoCategoriesStore, useAvitoCategoryFieldsStore } from '@/entities';
 import { onMounted } from 'vue';
 import { getAvitoToken } from '@/shared/api/avito';
 import PageContainer from '@/features/page-container';
@@ -246,7 +246,6 @@ import PageContainer from '@/features/page-container';
 const { value: avito_token } = useCookies('avito_token');
 const { value: user_id } = useCookies('user_id');
 
-const sidebarStore = useSidebarStore();
 const avitoCategoriesStore = useAvitoCategoriesStore();
 const avitoCategoryFieldsStore = useAvitoCategoryFieldsStore();
 
