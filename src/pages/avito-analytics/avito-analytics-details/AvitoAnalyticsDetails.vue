@@ -39,214 +39,16 @@
           <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 bg-gray-50 uppercase dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" class="px-3 py-3 font-medium">ID объявления</th>
+                <th scope="col" class="px-3 py-3 font-medium">ID</th>
                 <th
+                  v-for="header in tableHeaders"
+                  :key="header.key"
                   scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('title')"
+                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-nowrap"
+                  @click="sortTable(header.key)"
                 >
-                  Название
-                  <span v-if="sortColumn === 'title'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('price')"
-                >
-                  Цена
-                  <span v-if="sortColumn === 'price'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('position')"
-                >
-                  Позиция
-                  <span v-if="sortColumn === 'position'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('views')"
-                >
-                  Просмотры
-                  <span v-if="sortColumn === 'views'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('promotion')"
-                >
-                  Продвижение
-                  <span v-if="sortColumn === 'promotion'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('city_query')"
-                >
-                  Город
-                  <span v-if="sortColumn === 'city_query'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('ad_date')"
-                >
-                  Дата
-                  <span v-if="sortColumn === 'ad_date'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('categories')"
-                >
-                  Категории
-                  <span v-if="sortColumn === 'categories'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('seller_name')"
-                >
-                  Имя продавца
-                  <span v-if="sortColumn === 'seller_name'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-10 dark:hover:bg-gray-600"
-                  @click="sortTable('seller_type')"
-                >
-                  Тип продавца
-                  <span v-if="sortColumn === 'seller_type'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('rating')"
-                >
-                  Рейтинг
-                  <span v-if="sortColumn === 'rating'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('reviews_count')"
-                >
-                  Кол-во отзывов
-                  <span v-if="sortColumn === 'reviews_count'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('photo_count')"
-                >
-                  Кол-во фото
-                  <span v-if="sortColumn === 'photo_count'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('address')"
-                >
-                  Адрес
-                  <span v-if="sortColumn === 'address'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('description')"
-                >
-                  Описание
-                  <span v-if="sortColumn === 'description'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-10 dark:hover:bg-gray-600"
-                  @click="sortTable('delivery')"
-                >
-                  Доставка
-                  <span v-if="sortColumn === 'delivery'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('ads_count')"
-                >
-                  Кол-во об.
-                  <span v-if="sortColumn === 'ads_count'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-10 dark:hover:bg-gray-600"
-                  @click="sortTable('closed_ads_count')"
-                >
-                  Кол-во закрытых об.
-                  <span v-if="sortColumn === 'closed_ads_count'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('created_ts')"
-                >
-                  Дата создания
-                  <span v-if="sortColumn === 'created_ts'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('answer_time')"
-                >
-                  Время ответа
-                  <span v-if="sortColumn === 'answer_time'" class="ml-1">
-                    {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 py-3 font-medium cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
-                  @click="sortTable('register_date')"
-                >
-                  Дата регистрации
-                  <span v-if="sortColumn === 'register_date'" class="ml-1">
+                  {{ header.title }}
+                  <span v-if="sortColumn === header.key" class="ml-1">
                     {{ sortDirection === 'asc' ? '↑' : '↓' }}
                   </span>
                 </th>
@@ -335,141 +137,48 @@
           Нет данных для отображения
         </div>
 
-        <!-- Progress display section -->
-        <div
-          v-if="showProgress || progressData"
-          class="mt-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
-        >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <svg
-              class="w-5 h-5 mr-2 text-blue-500"
-              fill="currentColor"
-              viewBox="0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-            Прогресс обработки
-          </h3>
-
-          <div v-if="progressData" class="space-y-4">
-            <div>
-              <div class="flex justify-between mb-1">
-                <span class="text-base font-medium text-blue-700 dark:text-white">Прогресс</span>
-                <span class="text-sm font-medium text-blue-700 dark:text-white"
-                  >{{ calculateProgressPercentage() }}%</span
-                >
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
-                <div
-                  class="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out dark:bg-blue-50"
-                  :style="{ width: calculateProgressPercentage() + '%' }"
-                ></div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="flex items-center">
-                <div
-                  class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-90 dark:text-blue-300 mr-2"
-                >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">Обработано</div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ progressData.current_ads }} / {{ progressData.total_ads }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center">
-                <div
-                  class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-30 mr-2"
-                >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 10-16 8 8 0 000 16zm1-12a1 0 10-2 0v4a1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">Статус</div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">{{ progressData.status }}</div>
-                </div>
-              </div>
-
-              <div class="flex items-center">
-                <div
-                  class="bg-yellow-100 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300 mr-2"
-                >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">ID задачи</div>
-                  <div class="text-sm text-gray-50 dark:text-gray-400 break-all">{{ progressData.task_id }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else class="text-sm text-gray-700 dark:text-gray-400">Ожидание данных о прогрессе...</div>
-        </div>
+        <ProgressDisplay :task-id="route.params.id as string" @data-update="handleDataUpdate" />
       </div>
     </template>
   </PageContainer>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref, onUnmounted } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAvitoAnalyticsAdsStore } from '@/entities/avito-analytics-ads';
 import PageContainer from '@/features/page-container';
 import TextPopup from '@/shared/components/TextPopup.vue';
 import PromotionDisplay from '@/shared/components/PromotionDisplay.vue';
-import { CsvDownloadButton } from '@/features/csv-download-button';
+import { CsvDownloadButton, ProgressDisplay } from '@/features';
 
 const route = useRoute();
 const avitoAnalyticsAdsStore = useAvitoAnalyticsAdsStore();
 
-// WebSocket connection
-let ws: WebSocket | null = null;
-const wsUrl = 'ws://localhost:8080/api/ws';
-
-// Counter to track messages and update table every 5 messages
-let messageCounter = 0;
-
-// Progress tracking
-interface ProgressData {
-  task_id: string;
-  user_id: string;
-  progress: number;
-  total_ads: number;
-  current_ads: number;
-  status: string;
-  message: string;
-  timestamp: string;
-}
-
-const progressData = ref<ProgressData | null>(null);
-const showProgress = ref(false);
+// Define table headers with titles and keys for sorting
+const tableHeaders = [
+  { key: 'title', title: 'Название' },
+  { key: 'price', title: 'Цена' },
+  { key: 'position', title: 'Поз.' },
+  { key: 'views', title: 'Просмотры' },
+  { key: 'promotion', title: 'Продвижение' },
+  { key: 'city_query', title: 'Город' },
+  { key: 'ad_date', title: 'Дата' },
+  { key: 'categories', title: 'Категории' },
+  { key: 'seller_name', title: 'Имя продавца' },
+  { key: 'seller_type', title: 'Тип продавца' },
+  { key: 'rating', title: 'Рейтинг' },
+  { key: 'reviews_count', title: '# отзывов' },
+  { key: 'photo_count', title: '# фото' },
+  { key: 'address', title: 'Адрес' },
+  { key: 'description', title: 'Описание' },
+  { key: 'delivery', title: 'Доставка' },
+  { key: 'ads_count', title: '# об.' },
+  { key: 'closed_ads_count', title: '# закрытых об.' },
+  { key: 'created_ts', title: 'Дата создания' },
+  { key: 'answer_time', title: 'Время ответа' },
+  { key: 'register_date', title: 'Дата регистрации' },
+];
 
 // Sorting state
 const sortColumn = ref<string | null>(null);
@@ -492,14 +201,6 @@ onMounted(async () => {
       await avitoAnalyticsAdsStore.fetchRequests();
     }
   }
-
-  // Establish WebSocket connection to listen for progress
-  connectWebSocket(true);
-});
-
-onUnmounted(() => {
-  // Close WebSocket connection when component is unmounted
-  closeWebSocket();
 });
 
 const formatDate = (dateString: string) => {
@@ -512,91 +213,6 @@ const formatDate = (dateString: string) => {
     hour: '2-digit',
     minute: '2-digit',
   });
-};
-
-const connectWebSocket = (shouldShowProgress = true) => {
-  try {
-    // Check if there's already an open WebSocket connection
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      console.log('WebSocket connection already open');
-      // If we should show progress and it's not already shown, show it
-      if (shouldShowProgress && !showProgress.value) {
-        showProgress.value = true;
-      }
-      return;
-    }
-
-    // Close any existing connection before creating a new one
-    if (ws) {
-      ws.close();
-    }
-
-    ws = new WebSocket(wsUrl);
-
-    ws.onopen = () => {
-      console.log('WebSocket connection established');
-      if (shouldShowProgress) {
-        showProgress.value = true;
-      }
-    };
-
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      console.log('Received WebSocket message:', message);
-
-      progressData.value = message;
-
-      // Increment message counter
-      messageCounter++;
-
-      // Update table data every 5 messages
-      if (messageCounter % 5 === 0 && message.task_id) {
-        // Fetch updated ads data based on the task_id
-        avitoAnalyticsAdsStore.fetchAdsData(message.task_id);
-      }
-
-      // If the task is complete, close the connection
-      if (message.status === 'completed' || message.status === 'failed') {
-        closeWebSocket();
-        // Fetch final data when task is complete
-        if (message.task_id) {
-          avitoAnalyticsAdsStore.fetchAdsData(message.task_id);
-        }
-      }
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      closeWebSocket();
-    };
-  } catch (error) {
-    console.error('Error establishing WebSocket connection:', error);
-  }
-};
-
-const closeWebSocket = () => {
-  if (ws) {
-    ws.close();
-    ws = null;
-  }
-};
-
-const calculateProgressPercentage = () => {
-  if (!progressData.value) return 0;
-
-  // Use current_ads and total_ads to calculate percentage to ensure it stays within 0-100%
-  if (progressData.value.total_ads > 0) {
-    const calculatedPercentage = (progressData.value.current_ads / progressData.value.total_ads) * 100;
-    return Math.round(calculatedPercentage);
-  }
-
-  // Fallback to the progress field if total_ads is 0 or invalid, but cap it at 10%
-  const progressPercentage = progressData.value.progress * 100;
-  return Math.min(Math.round(progressPercentage), 100);
 };
 
 // Sorting function

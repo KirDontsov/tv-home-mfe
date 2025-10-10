@@ -143,8 +143,7 @@ const handleSubmit = async () => {
     const response = await createAvitoAnalyticsRequest(formData.value);
 
     if (response.ok) {
-      router.push(`/avito-analytics`);
-      // router.push(`/avito-analytics/${response?.requestId}`);
+      await router.push(`/avito-analytics/${response?.data?.avito_request_id}`);
     } else {
       alert('Произошла ошибка при отправке запроса');
     }
