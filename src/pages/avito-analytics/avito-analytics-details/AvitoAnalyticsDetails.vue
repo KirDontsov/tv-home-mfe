@@ -137,20 +137,22 @@
           Нет данных для отображения
         </div>
 
-        <ProgressDisplay :task-id="route.params.id as string" @data-update="handleDataUpdate" />
+        <ProgressDisplay :request-id="route.params.id as string" @data-update="handleDataUpdate" />
       </div>
     </template>
   </PageContainer>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAvitoAnalyticsAdsStore } from '@/entities/avito-analytics-ads';
 import PageContainer from '@/features/page-container';
 import TextPopup from '@/shared/components/TextPopup.vue';
+import { CsvDownloadButton } from '@/features';
 import PromotionDisplay from '@/shared/components/PromotionDisplay.vue';
-import { CsvDownloadButton, ProgressDisplay } from '@/features';
+
+const ProgressDisplay = defineAsyncComponent(() => import('@/features/progress-display'));
 
 const route = useRoute();
 const avitoAnalyticsAdsStore = useAvitoAnalyticsAdsStore();
@@ -202,6 +204,11 @@ onMounted(async () => {
     }
   }
 });
+
+const handleDataUpdate = async () => {
+  const requestId = route.params.id as string;
+  await avitoAnalyticsAdsStore.fetchAdsData(requestId);
+};
 
 const formatDate = (dateString: string) => {
   // Convert the date string to a more readable format

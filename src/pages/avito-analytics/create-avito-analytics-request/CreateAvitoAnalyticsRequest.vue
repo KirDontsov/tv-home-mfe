@@ -142,8 +142,8 @@ const handleSubmit = async () => {
     // Send the POST request to the backend
     const response = await createAvitoAnalyticsRequest(formData.value);
 
-    if (response.ok) {
-      await router.push(`/avito-analytics/${response?.data?.avito_request_id}`);
+    if (response && response.status === 'success') {
+      await router.push(`/avito-analytics/${response?.data?.avito_request?.request_id}`);
     } else {
       alert('Произошла ошибка при отправке запроса');
     }

@@ -176,7 +176,11 @@ export async function createAvitoAnalyticsRequest(data) {
         radius: data.radius || '',
         district: data.district || '',
       }),
-    });
+    })
+      .then((res) => res.json())
+      .catch(() => {
+        console.warn('error');
+      });
     return res;
   } catch (e) {
     throw e;
@@ -206,7 +210,7 @@ export async function getAvitoRequests() {
     return res;
   } catch (e) {
     throw e;
- }
+  }
 }
 
 export async function downloadAvitoRequestCsv(avitoRequestId: string) {

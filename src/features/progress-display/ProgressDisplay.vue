@@ -12,8 +12,11 @@
           <span class="text-base font-medium text-blue-700 dark:text-white">Прогресс</span>
           <span class="text-sm font-medium text-blue-700 dark:text-white">{{ calculateProgressPercentage() }}%</span>
         </div>
-        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-4">
-          <div class="bg-blue-600 h-2.5 rounded-full" :style="{ width: calculateProgressPercentage() + '%' }"></div>
+        <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700">
+          <div
+            class="bg-blue-600 h-4 rounded-full transition-all duration-500 ease-in-out dark:bg-blue-50"
+            :style="{ width: calculateProgressPercentage() + '%' }"
+          ></div>
         </div>
       </div>
 
@@ -28,9 +31,6 @@
         </div>
 
         <div class="flex items-center">
-          <div
-            class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-30 mr-2"
-          ></div>
           <div>
             <div class="text-sm font-medium text-gray-900 dark:text-white">Статус</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">{{ progressData.status }}</div>
@@ -38,9 +38,6 @@
         </div>
 
         <div class="flex items-center">
-          <div
-            class="bg-yellow-100 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300 mr-2"
-          ></div>
           <div>
             <div class="text-sm font-medium text-gray-900 dark:text-white">ID задачи</div>
             <div class="text-sm text-gray-50 dark:text-gray-400 break-all">{{ progressData.task_id }}</div>
@@ -77,9 +74,9 @@ interface ProgressData {
 const progressData = ref<ProgressData | null>(null);
 const showProgress = ref(false);
 
-// Props to receive taskId and control WebSocket connection
+// Props to receive requestId and control WebSocket connection
 interface Props {
-  taskId?: string;
+  requestId?: string;
   shouldShowProgress?: boolean;
 }
 
@@ -91,13 +88,13 @@ const props = withDefaults(defineProps<Props>(), {
 interface Emits {
   (e: 'progressUpdate', data: ProgressData): void;
   (e: 'taskComplete', data: ProgressData): void;
-  (e: 'dataUpdate', taskId: string): void;
+  (e: 'dataUpdate', requestId: string): void;
 }
 
 const emit = defineEmits<Emits>();
 
 onMounted(() => {
-  if (props.taskId) {
+  if (props.requestId) {
     connectWebSocket(props.shouldShowProgress);
   }
 });

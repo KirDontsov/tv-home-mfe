@@ -78,7 +78,6 @@ export const useAvitoAnalyticsAdsStore = defineStore('avito-analytics-ads', {
           const result = await response.json();
           // Handle the response format: { status: 'success', data: { ads: [...] } } or direct array
           if (result && result.data && Array.isArray(result.data.ads)) {
-            console.log('result.data.ads', result.data.ads);
             this.ads = result.data.ads;
           } else {
             this.ads = Array.isArray(result) ? result : [result];
